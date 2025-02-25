@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #screen{
+            width: 530px;
+            height: 557px;
+            background-color: grey;
+           }
+           .cell{
+            margin-left: 1.5px; 
+            margin-bottom: -1.5px; 
+            margin-top: 0px; 
+            margin-right: 0px; 
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+           }
+           .row{
+            margin: 0px;
+            width: 530px;
+            height: 15px;
+            background-color: grey;
+            display: inline-block;
+           }
+           #score{
+            font-size: 100px;
+           }
+           
+        </style>
+    </head>
+    <body>
+        <title>Snake Game</title>
+        
+        <span id="score">Score: </span>
+        
+        <div id="screen"></div>
+
+        <script>
+            let sc = 0
+
+            document.getElementById('score').innerHTML = 'Score: ' + sc.toString()
+
+            loose = false
+
+
+
+
+            //creating elements
+
+            for(let row = 0; row < 30; row ++){
+
+                let curr_row = document.createElement('div')
+                curr_row.id = "row-" + row.toString()
+                curr_row.classList.add('row')
+
+                for(let col = 0; col < 30; col ++){
+
+                    let curr_cell = document.createElement('div')
+
+
+                    curr_cell.id = "row-" + row.toString() + ' col-' + col.toString()
+                    curr_row.append(curr_cell)
+                    curr_cell.classList.add('cell')
+
+                }
+
+                let hryfg = document.getElementById('screen')
+                hryfg.append(curr_row)
+
+                //document.body.appendChild(curr_row);
+
+            }
+
+            let board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ]
+
+            let cur_direction = 'down'
+            let snake = [[1, 1],[2, 1],[3, 1]]
+
+            function dis(){
+                for(let i = 0; i < 30; i ++){
+                    for(let j = 0; j < 30; j ++){
+                        
+                        c = document.getElementById('row-' + i.toString() + ' col-' + j.toString())
+
+                        if(board[i][j] == 0){
+                            c.style.backgroundColor = 'black'
+                        } else if(board[i][j] == 1){
+                            c.style.backgroundColor = 'white'
+                        } else {
+                            c.style.backgroundColor = 'red'
+                        }
+
+                        if(loose){
+                            c.style.backgroundColor = 'blue'
+                        }
+
+                    }
+                }
+            }
+
+            function move_and_show_snake() {
+                
+                eaten = false
+                board[snake[0][0]][snake[0][1]] = 0
+                dis()
+
+                
+                if(board[snake[snake.length-1][0]][snake[snake.length-1][1]] != 2){
+                    snake.shift()
+                } else {
+                    h = Math.floor(Math.random() * 30)
+                    k = Math.floor(Math.random() * 30)
+
+                    while(board[h][k] == 1 || h == snake[snake.length-1][0] || k == snake[snake.length-1][1]){
+                        h = Math.floor(Math.random() * 30)
+                        k = Math.floor(Math.random() * 30)
+                    }
+
+                    board[h][k] = 2
+
+                    sc += 1
+
+                    document.getElementById('score').innerHTML = 'Score: ' + sc.toString()
+                    
+                }
+                
+                
+                for(let cell of snake){
+                    board[cell[0]][cell[1]] = 1
+                    dis()
+                }
+                
+
+
+                if(cur_direction == 'down'){
+                    snake.push([0,0])
+                    snake[snake.length - 1][0] = snake[snake.length - 2][0] + 1
+                    snake[snake.length - 1][1] = snake[snake.length - 2][1]
+                    if(snake[snake.length - 1][0] == 30){
+                        snake[snake.length - 1][0] = 0
+                    }
+                }
+                if(cur_direction == 'up'){
+                    snake.push([0,0])
+                    snake[snake.length - 1][0] = snake[snake.length - 2][0] - 1
+                    snake[snake.length - 1][1] = snake[snake.length - 2][1]
+                    if(snake[snake.length - 1][0] == -1){
+                        snake[snake.length - 1][0] = 29
+                    }
+                }
+                if(cur_direction == 'left'){
+                    snake.push([0,0])
+                    snake[snake.length - 1][0] = snake[snake.length - 2][0] + 0
+                    snake[snake.length - 1][1] = snake[snake.length - 2][1] - 1
+                    if(snake[snake.length - 1][1] == -1){
+                        snake[snake.length - 1][1] = 29
+                    }
+                    
+                }
+                if(cur_direction == 'right'){
+                    snake.push([0,0])
+                    snake[snake.length - 1][0] = snake[snake.length - 2][0] + 0
+                    snake[snake.length - 1][1] = snake[snake.length - 2][1] + 1
+                    if(snake[snake.length - 1][1] == 30){
+                        snake[snake.length - 1][1] = 0
+                    }
+                }
+                
+                if(board[snake[snake.length-1][0]][snake[snake.length-1][1]] == 1 || snake[snake.length-1][0] < 0 || snake[snake.length-1][0] > 29 || snake[snake.length-1][1] < 0 || snake[snake.length-1][1] > 29){
+                    loose = true
+                }
+                
+
+            }
+            
+            setInterval(move_and_show_snake, 50)
+
+            setInterval(dis, 10)
+            
+            
+            
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'ArrowUp') {
+                    cur_direction = 'up'
+                }
+                if (event.key === 'ArrowDown') {
+                    cur_direction = 'down'
+
+                }
+                if (event.key === 'ArrowLeft') {
+                    cur_direction = 'left'
+                }
+                if (event.key === 'ArrowRight') {
+                    cur_direction = 'right'
+                }
+            });
+            
+
+        </script>
+
+    </body>
+</html>
